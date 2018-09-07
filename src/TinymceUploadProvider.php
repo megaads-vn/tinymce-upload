@@ -1,6 +1,6 @@
 <?php
 
-namespace Megaads;
+namespace Megaads\TinymceUpload;
 
 use Illuminate\Support\ServiceProvider;
 

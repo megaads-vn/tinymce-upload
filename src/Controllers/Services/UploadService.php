@@ -6,7 +6,7 @@
  * Time: 3:13 PM
  */
 
-namespace Megaads\Controllers\Services;
+namespace Megaads\TinymceUpload\Controllers\Services;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
