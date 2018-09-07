@@ -1,9 +1,16 @@
 {
-    "require": {
-    },
+    "name": "megaads-vn/tinymce-upload",
+    "description": "Tinymce upload helper for laravel 5.2 + icoupon",
+    "type": "library",
     "autoload": {
         "psr-4": {
-            "MyApp\\": ["src/"]
+            "Megaads\\TinymceUpload\\": "src/"
         }
-    }
+    },
+    "authors": [
+        {
+            "name": "Le Van Quan",
+            "email": "quanbka.cntt@gmail.com"
+        }
+    ]
 }
