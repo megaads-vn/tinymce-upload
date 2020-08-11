@@ -90,10 +90,10 @@ class UploadService extends \App\Http\Controllers\Services\BaseService
             $result['result']['large'] = $fullRelativePath;
             $result['result']['thumb'] = $fullRelativePath;
 
-            if($_SERVER['SERVER_PORT']  == 443){
-                $location = 'https://' . $_SERVER['HTTP_HOST'] . '/images/' . $fullRelativePath;
-            } else {
+            if($_SERVER['SERVER_PORT']  == 80){
                 $location = 'http://' . $_SERVER['HTTP_HOST'] . '/images/' . $fullRelativePath;
+            } else {
+                $location = 'https://' . $_SERVER['HTTP_HOST'] . '/images/' . $fullRelativePath;
             }
 
             $result = [
