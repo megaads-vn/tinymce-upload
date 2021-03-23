@@ -51,6 +51,7 @@ class UploadService extends \App\Http\Controllers\Services\BaseService
     }
 
     public function tinymceUpload(Request $request){
+        $localePath = $this->getRouter()->getCurrentRoute()->getPrefix();
         $result = $this->getDefaultStatus();
         $file = $request->file('file');
         if ($message = $this->validator($file)) {
@@ -60,6 +61,25 @@ class UploadService extends \App\Http\Controllers\Services\BaseService
         $storage =  Storage::disk('images');
         $directoryPath = config('filesystems.disks.images.root');
         $relativePath = config('filesystems.disks.images.relative');
+        if ($localePath != "") {
+            $extractPath = explode("/", $directoryPath);
+            $toPublic = '';
+            $afterPublic = '';
+            foreach ($extractPath as $index => $item) {
+                if ($item !== '') {
+                    if ($item == 'public') {
+                        $toPublic .= '/' . $item;
+                        unset($extractPath[$index]);
+                        break;
+                    }
+                    $toPublic .= '/' . $item;
+                    unset($extractPath[$index]);
+                }
+                
+            }
+            $afterPublic = join('/', $extractPath);
+            $directoryPath = $toPublic . '/' . $localePath . $afterPublic; 
+        }
         try {
             $imageName = $request->get('fileName', '');
             if ($imageName) {
@@ -83,14 +103,15 @@ class UploadService extends \App\Http\Controllers\Services\BaseService
             $imageNewName = strtolower($imageNewName);
             $file->move($directoryPath, strtolower($imageNewName));
             $result = $this->getSuccessStatus();
-            $fullRelativePath = $imageNewName;
+            $fullRelativePath = $relativePath . $imageNewName;
+            
             if($customDirectoryPath){
                 $fullRelativePath = $relativePath . $customDirectoryPath . '/' . $imageNewName;
             }
             $result['result']['large'] = $fullRelativePath;
             $result['result']['thumb'] = $fullRelativePath;
 
-            $location = 'https://' . $_SERVER['HTTP_HOST'] . '/images/' . $fullRelativePath;
+            $location = 'https://' . $_SERVER['HTTP_HOST'] . (($localePath != '') ? '/'. $localePath : '') . $fullRelativePath;
             $result = [
                 'location' => $location
             ];
