@@ -62,23 +62,8 @@ class UploadService extends \App\Http\Controllers\Services\BaseService
         $directoryPath = config('filesystems.disks.images.root');
         $relativePath = config('filesystems.disks.images.relative');
         if ($localePath != "") {
-            $extractPath = explode("/", $directoryPath);
-            $toPublic = '';
-            $afterPublic = '';
-            foreach ($extractPath as $index => $item) {
-                if ($item !== '') {
-                    if ($item == 'public') {
-                        $toPublic .= '/' . $item;
-                        unset($extractPath[$index]);
-                        break;
-                    }
-                    $toPublic .= '/' . $item;
-                    unset($extractPath[$index]);
-                }
-                
-            }
-            $afterPublic = join('/', $extractPath);
-            $directoryPath = $toPublic . '/' . $localePath . $afterPublic; 
+            $directoryPath = $directoryPath . '/' . $localePath; 
+            $relativePath = $relativePath . $localePath;
         }
         try {
             $imageName = $request->get('fileName', '');
@@ -103,15 +88,15 @@ class UploadService extends \App\Http\Controllers\Services\BaseService
             $imageNewName = strtolower($imageNewName);
             $file->move($directoryPath, strtolower($imageNewName));
             $result = $this->getSuccessStatus();
-            $fullRelativePath = $relativePath . $imageNewName;
+            $fullRelativePath = $relativePath . '/' . $imageNewName;
             
             if($customDirectoryPath){
-                $fullRelativePath = $relativePath . $customDirectoryPath . '/' . $imageNewName;
+                $fullRelativePath = $relativePath . '/' . $customDirectoryPath . '/' . $imageNewName;
             }
             $result['result']['large'] = $fullRelativePath;
             $result['result']['thumb'] = $fullRelativePath;
 
-            $location = 'https://' . $_SERVER['HTTP_HOST'] . (($localePath != '') ? '/'. $localePath : '') . $fullRelativePath;
+            $location = 'https://' . $_SERVER['HTTP_HOST'] . $fullRelativePath;
             $result = [
                 'location' => $location
             ];
