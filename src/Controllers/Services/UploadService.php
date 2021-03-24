@@ -10,12 +10,12 @@ namespace Megaads\TinymceUpload\Controllers\Services;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
+use Illuminate\Routing\Router;
 use Storage;
 
-class UploadService extends \App\Http\Controllers\Services\BaseService
+class UploadService extends Controller
 {
-
 
     protected function validator($file)
     {
@@ -51,8 +51,11 @@ class UploadService extends \App\Http\Controllers\Services\BaseService
     }
 
     public function tinymceUpload(Request $request){
-        $localePath = $this->getRouter()->getCurrentRoute()->getPrefix();
-        $result = $this->getDefaultStatus();
+       $localePath = $request->route()->getPrefix();
+        $result = [
+            'status' => 'fail'
+        ];
+        
         $file = $request->file('file');
         if ($message = $this->validator($file)) {
             $result['message'] = $message;
@@ -87,7 +90,7 @@ class UploadService extends \App\Http\Controllers\Services\BaseService
             $imageNewName = $imageName . '_' . microtime(true) . '.' . $file->getClientOriginalExtension();
             $imageNewName = strtolower($imageNewName);
             $file->move($directoryPath, strtolower($imageNewName));
-            $result = $this->getSuccessStatus();
+            $result = ['status' => 'successful'];
             $fullRelativePath = $relativePath . '/' . $imageNewName;
             
             if($customDirectoryPath){
@@ -100,7 +103,6 @@ class UploadService extends \App\Http\Controllers\Services\BaseService
             $result = [
                 'location' => $location
             ];
-
 
         } catch (\Exception $ex) {
             $result['message'] = $ex->getMessage();
