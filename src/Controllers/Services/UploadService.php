@@ -99,7 +99,7 @@ class UploadService extends Controller
             $result['result']['large'] = $fullRelativePath;
             $result['result']['thumb'] = $fullRelativePath;
 
-            $location = 'https://' . $_SERVER['HTTP_HOST'] . $fullRelativePath;
+            $location = $this->getProtocol() . $_SERVER['HTTP_HOST'] . $fullRelativePath;
             $result = [
                 'location' => $location
             ];
@@ -109,6 +109,10 @@ class UploadService extends Controller
         }
 
         return response()->json($result);
+    }
+
+    private function getProtocol() {
+        return stripos($_SERVER['SERVER_PROTOCOL'],'https') === 0 ? 'https://' : 'http://';
     }
 
 }

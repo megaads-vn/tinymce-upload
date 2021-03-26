@@ -1,36 +1,39 @@
-## Getting started with Composer and PSR-4
+## LARAVEL UPLOAD IMAGE FOR TINYMCE
 
-Initial gist can be found at: [https://gist.github.com/pavlakis/8810829]
+Upload image server side for tinymce custom plugin. Normally, when you custom image upload plugin for tinymce you'll create some code on tinymce config and some code on server for upload image and return the image link. This package help you on the server side, it will be receiver the upload request and save into directory, where you want to save image, then return the absolute url for your tinymce editor.
 
-This is a very basic getting started example for setting up a basic project using PSR-4 and using composer's autoloader to run the tests.
+### INSTALL AND CONFIGURATION.
 
-There are 5 files in total:
+To install this package, just run command bellow: 
 
->Initially used just for composer to generate the autoloader
+```
+composer require megaads-vn/tinymce-upload
+```
 
-* MyApp/composer.json
+After install completed, open file app.php in config directory and add this line to providers section:
 
+```
+Megaads\TinymceUpload\TinymceUploadProvider::class,
+```
 
->Create a class with the application namespace MyApp\Http
+Then go to `filesystems.php` in `config` directory and add this config to the `disks` section:
 
-* MyApp/src/Http/Request.php
+```
+'images' => [
+    'driver' => 'local',
+    'root' => public_path('images'),
+    'relative' => '/images/',
+],
+```
+After all, run command `php artisan config:cache` and `php artisan cache:clear` to clear caches. You can call to bellow url for upload image to server.
 
->Create a test with its own namespace MyApp\Tests\Http
+```
+//example.com/upload/tinymce
+```
+Or if your website is multiple languages and have the url like `//example.com/(us|uk|fr)` you still can call upload image with a tiny changing. Like this: 
 
-* MyApp/tests/Http/RequestTest.php
+```
+//example.com/(us|uk|fr)/upload/tinymce
+```
 
-
->The bootstrap file for phpunit
-
-* MyApp/tests/bootstrap.php
-
-
-> For phpunit to know how to bootstrap the application
-
-* MyApp/tests/phpunit.xml.dist
-
-### Install and Run
-* Run composer install in the root directory of MyApp 
-* If succesful, composer has generated the autoloader file, at: MyApp/vendor/autoload.php
-* To run the tests, call phpunit from MyApp/tests
-
+Thanks!
