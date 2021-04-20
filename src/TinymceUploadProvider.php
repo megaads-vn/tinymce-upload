@@ -14,16 +14,11 @@ class TinymceUploadProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(\Illuminate\Routing\Router $router, \Illuminate\Contracts\Http\Kernel $kernel)
     {
         include __DIR__ . '/routes.php';
-        $router = App::make(Router::class);
-        $frameworkVersion = $this->getFrameworkVersion();
-        if ($frameworkVersion == 5.2) {
-            $router->pushMiddlewareToGroup('mce_upload', UploadMiddleware::class);
-        } else if ($frameworkVersion > 5.2) {
-            $router->aliasMiddleware('mce_upload', UploadMiddleware::class);
-        }
+        //router middleware
+        $router->middleware('mce_upload', UploadMiddleware::class);
     }
 
     /**
