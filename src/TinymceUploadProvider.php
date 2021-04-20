@@ -6,6 +6,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 use Megaads\TinymceUpload\Middleware\UploadMiddleware;
+use Megaads\TinymceUpload\Middleware\CorsMiddleware;
 
 class TinymceUploadProvider extends ServiceProvider
 {
@@ -19,6 +20,7 @@ class TinymceUploadProvider extends ServiceProvider
         include __DIR__ . '/routes.php';
         //router middleware
         $router->middleware('mce_upload', UploadMiddleware::class);
+        $router->middleware('mce_cors', CorsMiddleware::class);
     }
 
     /**
